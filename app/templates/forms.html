@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<form method="post" action="/">
+    {{ form.csrf_token }}
+    {{ form.image.label }} {{ form.image }}
+    {{ form.fname.label }} {{ form.fname(size=15) }}
+    {{ form.lname.label }} {{ form.lname(size=30) }}
+    {{ form.age.label }} {{ form.age(size=3) }}
+    {{ form.sex.label }} {{ form.sex(size=7) }}
+    <input type="submit" value="Go">
+</form>
+{% endblock %}
