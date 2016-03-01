@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div>
+<h1>Profiles</h1>
+    <br/>
+        <div>
+            <form action="" method="POST">
+                <button type="submit" class="btn btn-success">JSon Format</button>
+            </form>
+        </div>
+        <hr />
+        {% for profile in profiles %}
+            <div>
+                <img src="/pics/{{ profile.image }}" />
+            </div>
+            <div>
+                <b>User ID: </b> {{profile.userid}}
+            </div>
+            <div>
+                <b>Name: </b> {{profile.firstname}} {{profile.lastname}}
+            </div>
+            <div>
+                <b>Age: </b> {{profile.age}}
+            </div>
+            <div>
+                <b>Sex: </b> {{profile.sex}}
+            </div>
+{% endfor %}
+</div>
+{% endblock %}

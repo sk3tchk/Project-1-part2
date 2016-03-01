@@ -6,15 +6,18 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 from app import db, app
-import json
-import random
+from .forms import myform 
+from models import User
 from random import randint
 from app import app
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for,flash,jsonify
 from werkzeug import secure_filename
 from sqlalchemy.sql import functions
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+import os
+import random
+import json
+
 
 ###
 # Routing for your application.
@@ -42,39 +45,40 @@ def send_text_file(file_name):
     file_dot_text = file_name + '.txt'
     return app.send_static_file(file_dot_text)
     
-@app.route('/profile/')
+@app.route('/profile/', methods =('GET','POST'))
 def profile():
-    user = userForm()
-    userid = random.randint(62000000,620099999)
-    if request.method == 'POST' and form.validate_on_submit():
-        firstname = request.form['fname']
-        lastname = request.form['lname']
+    form =  myform()
+    userid = random.randint(62000000, 620099999)
+    print 'test'
+    if request.method == 'POST': #and form.validate_on_submit():
+        print 'validate'
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
         age = request.form['age']
         sex = request.form['sex']
-        file = request.form['image']
+        file = request.files['image']
         image = secure_filename(file.filename)
-        file.save(os.path.join("app/static/img", image))
-        
-        user = User(userid, fname, lname, sex, age, image)
+        file.save(os.path.join("picture", image))
+        user = User(userid, image, firstname, lastname, age, sex)
         db.session.add(user)
         db.session.commit()
         flash('File Upload Complete!!!')
         return redirect(url_for('profile'))
-    return render_template('forms.html', form = form)
+    return render_template('profile.html', form=form)
 
 @app.route('/profiles/', methods =['GET','POST'])
 def profiles():
     profiles = User.query.all()
     storage = []
-    if request.method == 'POST' or request.headers['Content-Type'] == 'application/json':
+    if request.method == 'POST': #or request.headers['Content-Type'] == 'application/json':
         for users in profiles:
-            storage.append({'userid':users.userid, 'first name':users.fname,'last name':users.lname,'sex':users.sex,'age':users.age,'image':users.image})
+            storage.append({'userid':users.userid, 'image':users.image, 'first name':users.firstname,'last name':users.lastname,'age':users.age,'sex':users.sex})
         users ={'users':storage}
         return jsonify(users)
     else:
-      return render_template('profiles.html',profiles=profiles)
+        return render_template('profiles.html',profiles=profiles)
         
-@app.route('/profile/userid/', methods=['POST','GET'])
+#@app.route('/profile/userid/', methods=['POST','GET'])
 
 
 

@@ -1,2 +1,2 @@
-SQLALCHEMY_DATABASE_URI = 'postgresql://psql@localhost/psql'
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:omnious@localhost/users'
 SECRET_KEY = 'omnious'
