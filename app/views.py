@@ -10,7 +10,7 @@ from .forms import myform
 from models import User
 from random import randint
 from app import app
-from flask import render_template, request, redirect, url_for,flash,jsonify
+from flask import render_template, request, redirect, url_for,flash,jsonify,send_from_directory 
 from werkzeug import secure_filename
 from sqlalchemy.sql import functions
 
@@ -38,6 +38,11 @@ def about():
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory(os.path.dirname(os.path.abspath(__file__)) + '/../picture/',
+                               filename)
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
@@ -78,7 +83,10 @@ def profiles():
     else:
         return render_template('profiles.html',profiles=profiles)
         
-#@app.route('/profile/userid/', methods=['POST','GET'])
+@app.route('/profile/<userid>/', methods=['GET'])
+def query(userid):
+    queryid = User.query.filter_by(userid=userid).first_or_404()
+    return render_template('profiles.html',profiles=profiles)
 
 
 
